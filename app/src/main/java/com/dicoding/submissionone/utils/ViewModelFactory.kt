@@ -5,6 +5,7 @@ package com.dicoding.submissionone.utils
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dicoding.submissionone.ui.login.LoginViewModel
 import com.dicoding.submissionone.ui.register.RegisterViewModel
 
 
@@ -17,9 +18,9 @@ class ViewModelFactory(private val repo: StoryRepository) : ViewModelProvider.Ne
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repo) as T
             }
-//            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-//                LoginViewModel(repo) as T
-//            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(repo) as T
+            }
 //            modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
 //                AddStoryViewModel(repo) as T
 //            }

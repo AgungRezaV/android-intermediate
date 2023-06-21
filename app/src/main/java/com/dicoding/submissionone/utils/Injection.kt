@@ -10,7 +10,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings"
 
 object Injection {
     fun provideRepository(context: Context): StoryRepository {
-        val preferences = SharedPref.getInstance(context.dataStore)
+        val preferences = UserPreference.getInstance(context.dataStore)
         val apiService = ApiConfig.getApiService()
         return StoryRepository(preferences, apiService)
     }

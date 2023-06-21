@@ -21,7 +21,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.lang.Exception
 
-class StoryRepository(private val sharedPref: SharedPref, private val apiService: ApiService) {
+class StoryRepository(private val userPreference: UserPreference, private val apiService: ApiService) {
 
     fun getStory(): LiveData<PagingData<ListStory>> {
         return Pager(
@@ -29,16 +29,16 @@ class StoryRepository(private val sharedPref: SharedPref, private val apiService
                 pageSize = 5
             ),
             pagingSourceFactory = {
-                PagingSource(apiService, sharedPref)
+                PagingSource(apiService, userPreference)
             }
         ).liveData
     }
 
-    fun rLogin(loginRequest: LoginRequest): LiveData<Result<LoginResponse>> = liveData {
+    fun repoLogin(email: String, password: String): LiveData<Result<LoginResponse>> = liveData {
         emit(Result.Loading)
 
         try {
-            val response = apiService.login(loginRequest)
+            val response = apiService.login(LoginRequest(email, password))
             emit(Result.Success(response))
         } catch (e: Exception) {
             Log.d("Login", e.message.toString())
@@ -46,10 +46,10 @@ class StoryRepository(private val sharedPref: SharedPref, private val apiService
         }
     }
 
-    fun repoRegister(name: String, email: String, password: String)
-            : LiveData<Result<RegisterResponse>> =
+    fun repoRegister(name: String, email: String, password: String): LiveData<Result<RegisterResponse>> =
         liveData {
             emit(Result.Loading)
+
             try {
                 val response = apiService.register(RegisterRequest(name, email, password))
                 emit(Result.Success(response))
@@ -86,18 +86,18 @@ class StoryRepository(private val sharedPref: SharedPref, private val apiService
 //    }
 
     fun getUserData(): LiveData<UserData> {
-        return sharedPref.getUser().asLiveData()
+        return userPreference.getUser().asLiveData()
     }
 
     suspend fun saveUserData(userData: UserData) {
-        sharedPref.saveUser(userData)
+        userPreference.saveUser(userData)
     }
 
     suspend fun login() {
-        sharedPref.login()
+        userPreference.login()
     }
 
     suspend fun logout() {
-        sharedPref.logout()
+        userPreference.logout()
     }
 }

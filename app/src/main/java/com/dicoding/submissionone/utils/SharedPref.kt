@@ -1,60 +1,23 @@
 package com.dicoding.submissionone.utils
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import com.dicoding.submissionone.data.response.UserData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import android.content.Context
 
-class SharedPref private constructor(private val dataStore: DataStore<Preferences>) {
+class SharedPref constructor(context: Context) {
+    private val sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
 
-    fun getUser(): Flow<UserData> {
-        return dataStore.data.map { preferences ->
-            UserData(
-                preferences[NAME_KEY] ?: "",
-                preferences[TOKEN_KEY] ?: "",
-                preferences[STATE_KEY] ?: false
-            )
-        }
+    fun saveToken(token: String) {
+        sharedPreferences.edit().putString("TOKEN_KEY", token).apply()
     }
 
-    suspend fun saveUser(userData: UserData) {
-        dataStore.edit { preferences ->
-            preferences[NAME_KEY] = userData.name
-            preferences[TOKEN_KEY] = userData.token
-            preferences[STATE_KEY] = userData.isLogin
-        }
+    fun getToken(): String? {
+        return sharedPreferences.getString("TOKEN_KEY", null)
     }
 
-    suspend fun login() {
-        dataStore.edit { preferences ->
-            preferences[STATE_KEY] = true
-        }
-    }
-
-    suspend fun logout() {
-        dataStore.edit { preferences ->
-            preferences[STATE_KEY] = false
-        }
+    fun clearToken() {
+        sharedPreferences.edit().remove("TOKEN_KEY").apply()
     }
 
     companion object {
-        @Volatile
-        private var INSTANCE: SharedPref? = null
-
-        private val NAME_KEY = stringPreferencesKey("name")
-        private val TOKEN_KEY = stringPreferencesKey("token")
-        private val STATE_KEY = booleanPreferencesKey("state")
-
-        fun getInstance(dataStore: DataStore<Preferences>): SharedPref {
-            return INSTANCE ?: synchronized(this) {
-                val instance = SharedPref(dataStore)
-                INSTANCE = instance
-                instance
-            }
-        }
+        private const val SHARED_PREF_NAME = "shared_pref"
     }
 }

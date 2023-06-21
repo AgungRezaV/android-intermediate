@@ -3,15 +3,15 @@ package com.dicoding.submissionone.ui.story
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dicoding.submissionone.data.retrofit.ApiService
-import com.dicoding.submissionone.utils.SharedPref
+import com.dicoding.submissionone.utils.UserPreference
 import kotlinx.coroutines.flow.first
 
-class PagingSource(private val apiService: ApiService, private val sharedPref: SharedPref) : PagingSource<Int, ListStory>() {
+class PagingSource(private val apiService: ApiService, private val userPreference: UserPreference) : PagingSource<Int, ListStory>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStory> {
         return try {
             val page = params.key ?: INITIAL_PAGE_INDEX
-            val token = "Bearer ${sharedPref.getUser().first().token}"
+            val token = "Bearer ${userPreference.getUser().first().token}"
             val responseData = apiService.allStories(token, page, params.loadSize).listStory
 
             LoadResult.Page(
