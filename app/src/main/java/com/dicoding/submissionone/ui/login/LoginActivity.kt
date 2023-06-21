@@ -1,15 +1,17 @@
 package com.dicoding.submissionone.ui.login
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.submissionone.data.request.LoginRequest
 import com.dicoding.submissionone.data.response.UserData
-import com.dicoding.submissionone.ui.main.MainActivity
 import com.dicoding.submissionone.databinding.ActivityLoginBinding
+import com.dicoding.submissionone.ui.main.MainActivity
+import com.dicoding.submissionone.ui.register.RegisterActivity
 import com.dicoding.submissionone.utils.Result
 import com.dicoding.submissionone.utils.SharedPref
 import com.dicoding.submissionone.utils.ViewModelFactory
@@ -26,11 +28,16 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         viewModelFactory = ViewModelFactory.getInstance(this)
         sharedPref = SharedPref(this)
         viewModel = ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
 
-        binding.progressBar.visibility = View.GONE
+        binding.apply {
+            progressBar.visibility = View.GONE
+            tvNotif.visibility = View.GONE
+        }
 
         binding.btnLogin.setOnClickListener {
             val email = binding.editTextInputEmail.text.toString()
@@ -56,10 +63,37 @@ class LoginActivity : AppCompatActivity() {
                     login(email, password)
                 }
             }
+        }
 
+        binding.btnDaftar.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        playAnimation()
+    }
+
+    //Property Animation
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.textViewNamaLogin, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val animasiLogo = ObjectAnimator.ofFloat(binding.ivLogoApp, View.ALPHA, 2F).setDuration(1000)
+        val animasiEtEmail = ObjectAnimator.ofFloat(binding.editTextInputEmail, View.ALPHA, 1f).setDuration(750)
+        val animasiEtPassword = ObjectAnimator.ofFloat(binding.editTextInputPassword, View.ALPHA, 1f).setDuration(750)
+        val animasiBtnLogin = ObjectAnimator.ofFloat(binding.btnLogin, View.ALPHA, 1f).setDuration(500)
+        val animasiTvDecor = ObjectAnimator.ofFloat(binding.textDecorOne, View.ALPHA, 1f).setDuration(500)
+        val animasiBtnDaftar = ObjectAnimator.ofFloat(binding.btnDaftar, View.ALPHA, 1F).setDuration(500)
+
+        AnimatorSet().apply {
+            playSequentially(animasiLogo, animasiEtEmail, animasiEtPassword, animasiBtnLogin, animasiTvDecor, animasiBtnDaftar)
+            start()
         }
     }
 
+    //Login
     private fun login(x: String, y: String) {
         binding.progressBar.visibility = View.VISIBLE
 
@@ -84,7 +118,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Result.Error -> {
-                    Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
+                    binding.tvNotif.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
                 }
             }

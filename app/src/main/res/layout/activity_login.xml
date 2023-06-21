@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="24dp"
     tools:context=".ui.login.LoginActivity">
 
@@ -19,15 +20,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/ivLogoApp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src="@drawable/book_quill"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNamaLogin" />
+
     <EditText
         android:id="@+id/editTextInputEmail"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
+        android:alpha="0"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNamaLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/ivLogoApp" />
 
     <EditText
         android:id="@+id/editTextInputPassword"
@@ -37,25 +49,58 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextInputEmail" />
+        app:layout_constraintTop_toBottomOf="@id/editTextInputEmail"
+        android:alpha="0"/>
+
+    <TextView
+        android:id="@+id/tvNotif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Email atau Password Salah !"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/editTextInputPassword"
+        tools:layout_editor_absoluteX="24dp" />
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:alpha="0"
         android:text="@string/login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextInputPassword" />
+
+    <TextView
+        android:id="@+id/textDecorOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:alpha="0"
+        android:text="@string/belum_ada_akun"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+
+    <Button
+        android:id="@+id/btnDaftar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/daftar"
+        android:backgroundTint="@color/teal_200"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDecorOne"
+        android:alpha="0"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDaftar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

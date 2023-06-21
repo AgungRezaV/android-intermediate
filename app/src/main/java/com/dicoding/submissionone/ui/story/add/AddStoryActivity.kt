@@ -99,7 +99,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
 
-        val pick = Intent.createChooser(intent, "Pilih Gambar")
+        val pick = Intent.createChooser(intent, "Pilih Gambar ...")
         launchGallery.launch(pick)
     }
 

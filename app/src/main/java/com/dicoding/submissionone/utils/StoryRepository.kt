@@ -71,17 +71,6 @@ class StoryRepository(private val userPreference: UserPreference, private val ap
         }
     }
 
-//    fun getStoryLoc(token: String): LiveData<Result<AllStoriesResponse>> = liveData {
-//        emit(Result.Loading)
-//        try {
-//            val response = apiService.getStoriesLocation(token, 1)
-//            emit(Result.Success(response))
-//        } catch (e: Exception) {
-//            Log.d("Signup", e.message.toString())
-//            emit(Result.Error(e.message.toString()))
-//        }
-//    }
-
     fun getUserData(): LiveData<UserData> {
         return userPreference.getUser().asLiveData()
     }

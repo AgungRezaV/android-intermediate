@@ -1,4 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
 
 package com.dicoding.submissionone.utils
 
@@ -10,25 +9,21 @@ import com.dicoding.submissionone.ui.main.MainActivityViewModel
 import com.dicoding.submissionone.ui.register.RegisterViewModel
 import com.dicoding.submissionone.ui.story.add.AddStoryViewModel
 
-
-class ViewModelFactory(private val repo: StoryRepository) : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MainActivityViewModel::class.java) -> {
-                MainActivityViewModel(repo) as T
+                MainActivityViewModel(repository) as T
             }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
-                RegisterViewModel(repo) as T
+                RegisterViewModel(repository) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
-                LoginViewModel(repo) as T
+                LoginViewModel(repository) as T
             }
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
-                AddStoryViewModel(repo) as T
+                AddStoryViewModel(repository) as T
             }
-//            modelClass.isAssignableFrom(StoryMapsViewModel::class.java) -> {
-//                StoryMapsViewModel(repo) as T
-//            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
