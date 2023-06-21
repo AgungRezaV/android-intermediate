@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.dicoding.submissionone.data.request.LoginRequest
+import com.dicoding.submissionone.data.response.UserData
 import com.dicoding.submissionone.ui.main.MainActivity
 import com.dicoding.submissionone.databinding.ActivityLoginBinding
 import com.dicoding.submissionone.utils.Result
@@ -44,7 +46,8 @@ class LoginActivity : AppCompatActivity() {
                     binding.editTextInputPassword.requestFocus()
                 }
                 password.length < 8 -> {
-                    binding.editTextInputPassword.error = "Password harus terdiri dari setidaknya 8 karakter"
+                    binding.editTextInputPassword.error =
+                        "Password harus terdiri dari setidaknya 8 karakter"
                     binding.editTextInputPassword.requestFocus()
                 }
                 else -> {
@@ -57,15 +60,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun login(x: String, y:String) {
+    private fun login(x: String, y: String) {
         binding.progressBar.visibility = View.VISIBLE
 
-        viewModel.login(x, y).observe(this){
+        LoginRequest(binding.editTextInputEmail.text.toString(), binding.editTextInputPassword.text.toString())
+        viewModel.login(x, y).observe(this) {
             when (it) {
                 is Result.Success -> {
                     binding.progressBar.visibility = View.GONE
 
                     val response = it.data
+                    saveUserData(
+                        UserData(
+                            response.loginResult?.name.toString(),
+                            response.loginResult?.token.toString(),
+                            true
+                        )
+                    )
 
                     sharedPref.saveToken(response.loginResult.token)
                     startActivity(Intent(this, MainActivity::class.java))
@@ -78,5 +89,9 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun saveUserData(userData: UserData) {
+        viewModel.saveUser(userData)
     }
 }

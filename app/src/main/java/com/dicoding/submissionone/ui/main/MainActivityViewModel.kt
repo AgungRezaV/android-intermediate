@@ -7,9 +7,16 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.dicoding.submissionone.ui.story.ListStory
 import com.dicoding.submissionone.utils.StoryRepository
+import kotlinx.coroutines.launch
 
 class MainActivityViewModel(private val repository: StoryRepository): ViewModel() {
     fun getStory(): LiveData<PagingData<ListStory>>{
         return repository.getStory().cachedIn(viewModelScope)
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            repository.logout()
+        }
     }
 }
