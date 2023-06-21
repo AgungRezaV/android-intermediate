@@ -59,10 +59,7 @@ class StoryRepository(private val userPreference: UserPreference, private val ap
             }
         }
 
-    fun addStory(
-        token: String,
-        file: MultipartBody.Part,
-        description: RequestBody, lat: Double?, lon: Double?
+    fun addStory(token: String, file: MultipartBody.Part, description: RequestBody, lat: Float, lon: Float
     ): LiveData<Result<AddStoryResponse>> = liveData {
         emit(Result.Loading)
         try {

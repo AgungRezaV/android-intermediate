@@ -8,4 +8,14 @@
     <string name="login">Login</string>
     <string name="add_story">Add Story</string>
     <string name="logout">Logout</string>
+    <string name="galeri">Galeri</string>
+    <string name="kamera">Kamera</string>
+    <string name="submit">Submit</string>
+    <string name="deskripsi_gambar">Deskripsi Gambar ...</string>
+    <string name="detail">Detail</string>
+    <string name="kirim">Kirim</string>
+    <string name="upload">Upload</string>
+    <string name="tambah_story">Tambah Story</string>
+    <string name="deskripsi">Deskripsi</string>
+    <string name="gambar_hint">Gambar</string>
 </resources>

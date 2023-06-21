@@ -72,8 +72,8 @@ class LoginActivity : AppCompatActivity() {
                     val response = it.data
                     saveUserData(
                         UserData(
-                            response.loginResult?.name.toString(),
-                            response.loginResult?.token.toString(),
+                            response.loginResult.name,
+                            response.loginResult.token,
                             true
                         )
                     )

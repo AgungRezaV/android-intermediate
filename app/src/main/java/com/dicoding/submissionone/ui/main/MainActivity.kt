@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.submissionone.R
@@ -13,8 +12,11 @@ import com.dicoding.submissionone.databinding.ActivityMainBinding
 import com.dicoding.submissionone.ui.login.LoginActivity
 import com.dicoding.submissionone.ui.story.LoadingStoryAdapter
 import com.dicoding.submissionone.ui.story.StoryAdaptor
+import com.dicoding.submissionone.ui.story.add.AddStoryActivity
 import com.dicoding.submissionone.utils.SharedPref
+import com.dicoding.submissionone.utils.VerticalSpaceItemDecoration
 import com.dicoding.submissionone.utils.ViewModelFactory
+import com.dicoding.submissionone.utils.dp
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -36,8 +38,11 @@ class MainActivity : AppCompatActivity() {
         sharedPref = SharedPref(this)
 
         adaptor = StoryAdaptor()
-        binding.rvStory.layoutManager = LinearLayoutManager(this)
-        binding.rvStory.setHasFixedSize(true)
+        binding.apply {
+            rvStory.layoutManager = LinearLayoutManager(this@MainActivity)
+            rvStory.setHasFixedSize(true)
+            rvStory.addItemDecoration(VerticalSpaceItemDecoration(16.dp))
+        }
 
         tokenCheck()
     }
@@ -54,11 +59,10 @@ class MainActivity : AppCompatActivity() {
                 adaptor.submitData(lifecycle, it)
             }
 
-//            binding.fabAddStory.setOnClickListener {
-//                startActivity(Intent(this, AddStoryActivity::class.java))
-//                finish()
-//            }
-            Toast.makeText(this, sharedPref.getToken().toString(), Toast.LENGTH_SHORT).show()
+            binding.fabAddStory.setOnClickListener {
+                startActivity(Intent(this, AddStoryActivity::class.java))
+                finish()
+            }
         }
     }
 
@@ -74,9 +78,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
-//            R.id.btnmaps -> {
-//                startActivity(Intent(this, StoryMaps::class.java))
-//            }
         }
         return true
     }

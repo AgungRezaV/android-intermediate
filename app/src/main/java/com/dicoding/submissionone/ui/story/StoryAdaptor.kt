@@ -1,6 +1,7 @@
 package com.dicoding.submissionone.ui.story
 
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.submissionone.databinding.ListStoryBinding
+import com.dicoding.submissionone.ui.story.detail.DetailActivity
 
 
 class StoryAdaptor : PagingDataAdapter<ListStory, StoryAdaptor.StoryViewHolder>(DIFF_CALLBACK) {
@@ -24,31 +26,21 @@ class StoryAdaptor : PagingDataAdapter<ListStory, StoryAdaptor.StoryViewHolder>(
         }
     }
 
-    class StoryViewHolder(private val binding: ListStoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
+    class StoryViewHolder(private val binding: ListStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStory) {
             with(binding) {
                 Glide.with(itemView.context)
                     .load(story.photoUrl)
-                    .into(imgHero)
-                tvName.text = story.name
-                tvCreated.text = story.createdAt?.removeRange(16, story.createdAt!!.length)
-                tvDesc.text = story.description
+                    .into(ivListStory)
+                tvListStoryName.text = story.name
+                tvListStoryDescription.text = story.description
             }
+            //Detail Item
             itemView.setOnClickListener {
-//                val intent = Intent(itemView.context, DetilStoryActivity::class.java).apply {
-//                    putExtra(DetilStoryActivity.EXTRA_NAME, story)
-//                }
-//                val optionsCompat: ActivityOptionsCompat =
-//                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        itemView.context as Activity,
-//                        Pair(binding.imgHero, "image"),
-//                        Pair(binding.tvName, "name"),
-//                        Pair(binding.tvDesc, "deskripsi"),
-//                        Pair(binding.tvCreated, "created")
-//                    )
-//                it.context.startActivity(intent, optionsCompat.toBundle())
+                val intent = Intent(itemView.context, DetailActivity::class.java).apply {
+                    putExtra(DetailActivity.NAME, story)
+                }
+                it.context.startActivity(intent)
             }
         }
     }
