@@ -5,11 +5,15 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import com.dicoding.submissionone.R
 import com.dicoding.submissionone.data.request.LoginRequest
 import com.dicoding.submissionone.data.response.UserData
 import com.dicoding.submissionone.databinding.ActivityLoginBinding
+import com.dicoding.submissionone.ui.login.customview.LoginEditText
 import com.dicoding.submissionone.ui.main.MainActivity
 import com.dicoding.submissionone.ui.register.RegisterActivity
 import com.dicoding.submissionone.utils.Result
@@ -21,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var viewModel: LoginViewModel
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var sharedPref: SharedPref
+
+    private lateinit var loginEditText: LoginEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +43,10 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
             progressBar.visibility = View.GONE
             tvNotif.visibility = View.GONE
+            btnLogin.isEnabled = false
         }
+
+        editTextWatcher()
 
         binding.btnLogin.setOnClickListener {
             val email = binding.editTextInputEmail.text.toString()
@@ -72,6 +81,38 @@ class LoginActivity : AppCompatActivity() {
         playAnimation()
     }
 
+    private fun editTextWatcher() {
+        loginEditText = findViewById(R.id.editTextInputPassword)
+
+        loginEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if(s.toString().length < 8){
+                    binding.editTextInputPassword.error =
+                        "Password harus terdiri dari setidaknya 8 karakter"
+                } else {
+                    enableButton()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {
+            }
+        })
+    }
+
+    private fun enableButton() {
+        val result = {
+            binding.apply {
+                editTextInputPassword.text
+            }
+        }
+
+        binding.btnLogin.isEnabled = result.toString().isNotEmpty()
+    }
+
     //Property Animation
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.textViewNamaLogin, View.TRANSLATION_X, -30f, 30f).apply {
@@ -80,15 +121,28 @@ class LoginActivity : AppCompatActivity() {
             repeatMode = ObjectAnimator.REVERSE
         }.start()
 
-        val animasiLogo = ObjectAnimator.ofFloat(binding.ivLogoApp, View.ALPHA, 2F).setDuration(1000)
-        val animasiEtEmail = ObjectAnimator.ofFloat(binding.editTextInputEmail, View.ALPHA, 1f).setDuration(750)
-        val animasiEtPassword = ObjectAnimator.ofFloat(binding.editTextInputPassword, View.ALPHA, 1f).setDuration(750)
-        val animasiBtnLogin = ObjectAnimator.ofFloat(binding.btnLogin, View.ALPHA, 1f).setDuration(500)
-        val animasiTvDecor = ObjectAnimator.ofFloat(binding.textDecorOne, View.ALPHA, 1f).setDuration(500)
-        val animasiBtnDaftar = ObjectAnimator.ofFloat(binding.btnDaftar, View.ALPHA, 1F).setDuration(500)
+        val animasiLogo =
+            ObjectAnimator.ofFloat(binding.ivLogoApp, View.ALPHA, 2F).setDuration(1000)
+        val animasiEtEmail =
+            ObjectAnimator.ofFloat(binding.editTextInputEmail, View.ALPHA, 1f).setDuration(750)
+        val animasiEtPassword =
+            ObjectAnimator.ofFloat(binding.editTextInputPassword, View.ALPHA, 1f).setDuration(750)
+        val animasiBtnLogin =
+            ObjectAnimator.ofFloat(binding.btnLogin, View.ALPHA, 1f).setDuration(500)
+        val animasiTvDecor =
+            ObjectAnimator.ofFloat(binding.textDecorOne, View.ALPHA, 1f).setDuration(500)
+        val animasiBtnDaftar =
+            ObjectAnimator.ofFloat(binding.btnDaftar, View.ALPHA, 1F).setDuration(500)
 
         AnimatorSet().apply {
-            playSequentially(animasiLogo, animasiEtEmail, animasiEtPassword, animasiBtnLogin, animasiTvDecor, animasiBtnDaftar)
+            playSequentially(
+                animasiLogo,
+                animasiEtEmail,
+                animasiEtPassword,
+                animasiBtnLogin,
+                animasiTvDecor,
+                animasiBtnDaftar
+            )
             start()
         }
     }
@@ -97,7 +151,10 @@ class LoginActivity : AppCompatActivity() {
     private fun login(x: String, y: String) {
         binding.progressBar.visibility = View.VISIBLE
 
-        LoginRequest(binding.editTextInputEmail.text.toString(), binding.editTextInputPassword.text.toString())
+        LoginRequest(
+            binding.editTextInputEmail.text.toString(),
+            binding.editTextInputPassword.text.toString()
+        )
         viewModel.login(x, y).observe(this) {
             when (it) {
                 is Result.Success -> {
