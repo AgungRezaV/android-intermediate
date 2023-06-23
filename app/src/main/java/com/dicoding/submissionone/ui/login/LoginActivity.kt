@@ -13,7 +13,7 @@ import com.dicoding.submissionone.R
 import com.dicoding.submissionone.data.request.LoginRequest
 import com.dicoding.submissionone.data.response.UserData
 import com.dicoding.submissionone.databinding.ActivityLoginBinding
-import com.dicoding.submissionone.ui.login.customview.LoginEditText
+import com.dicoding.submissionone.ui.login.customview.PasswordEditText
 import com.dicoding.submissionone.ui.main.MainActivity
 import com.dicoding.submissionone.ui.register.RegisterActivity
 import com.dicoding.submissionone.utils.Result
@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var sharedPref: SharedPref
 
-    private lateinit var loginEditText: LoginEditText
+    private lateinit var passwordEditText: PasswordEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,13 +57,9 @@ class LoginActivity : AppCompatActivity() {
                     binding.editTextInputEmail.error = "Masukkan Email"
                     binding.editTextInputEmail.requestFocus()
                 }
+
                 password.isEmpty() -> {
                     binding.editTextInputPassword.error = "Masukkan Password"
-                    binding.editTextInputPassword.requestFocus()
-                }
-                password.length < 8 -> {
-                    binding.editTextInputPassword.error =
-                        "Password harus terdiri dari setidaknya 8 karakter"
                     binding.editTextInputPassword.requestFocus()
                 }
                 else -> {
@@ -82,20 +78,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun editTextWatcher() {
-        loginEditText = findViewById(R.id.editTextInputPassword)
+        passwordEditText = findViewById(R.id.editTextInputPassword)
 
-        loginEditText.addTextChangedListener(object : TextWatcher {
+        passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(s.toString().length < 8){
-                    binding.editTextInputPassword.error =
-                        "Password harus terdiri dari setidaknya 8 karakter"
-                } else {
-                    enableButton()
-                }
+                enableButton()
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -173,6 +164,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
+
                 is Result.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Result.Error -> {
                     binding.tvNotif.visibility = View.VISIBLE

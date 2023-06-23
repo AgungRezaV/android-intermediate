@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewNamaLogin" />
 
-    <com.dicoding.submissionone.ui.login.customview.LoginEditText
+    <com.dicoding.submissionone.ui.login.customview.EmailEditText
         android:id="@+id/editTextInputEmail"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivLogoApp" />
 
-    <com.dicoding.submissionone.ui.login.customview.LoginEditText
+    <com.dicoding.submissionone.ui.login.customview.PasswordEditText
         android:id="@+id/editTextInputPassword"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Email atau Password salah !"
+        android:text="@string/email_atau_password_salah"
         android:textColor="@color/red"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/editTextInputPassword"

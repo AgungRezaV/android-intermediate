@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.dicoding.submissionone.R
 
-class LoginEditText : AppCompatEditText, View.OnTouchListener {
+class EmailEditText : AppCompatEditText, View.OnTouchListener {
     private lateinit var clearButtonIcon: Drawable
 
     constructor(context: Context) : super(context) {
@@ -32,18 +32,28 @@ class LoginEditText : AppCompatEditText, View.OnTouchListener {
     }
 
     private fun init() {
-        clearButtonIcon = ContextCompat.getDrawable(context, R.drawable.baseline_close_24) as Drawable
+        clearButtonIcon =
+            ContextCompat.getDrawable(context, R.drawable.baseline_close_24) as Drawable
         setOnTouchListener(this)
 
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
             }
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty()) showClearButton() else hideClearButton()
+                if (("@") !in s && (".com") !in s) {
+                    error = "Email tidak valid !"
+                } else if (s.toString().isNotEmpty()) {
+                    showClearButton()
+                } else {
+                    error = null
+                    hideClearButton()
+                }
             }
+
             override fun afterTextChanged(s: Editable) {
-                // Do nothing.
+
             }
         })
     }
@@ -51,16 +61,17 @@ class LoginEditText : AppCompatEditText, View.OnTouchListener {
     private fun showClearButton() {
         setButtonDrawables(endOfTheText = clearButtonIcon)
     }
+
     private fun hideClearButton() {
         setButtonDrawables()
     }
 
     private fun setButtonDrawables(
         startOfTheText: Drawable? = null,
-        topOfTheText:Drawable? = null,
-        endOfTheText:Drawable? = null,
+        topOfTheText: Drawable? = null,
+        endOfTheText: Drawable? = null,
         bottomOfTheText: Drawable? = null
-    ){
+    ) {
         setCompoundDrawablesWithIntrinsicBounds(
             startOfTheText,
             topOfTheText,
@@ -88,18 +99,26 @@ class LoginEditText : AppCompatEditText, View.OnTouchListener {
             if (isClearButtonClicked) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        clearButtonIcon = ContextCompat.getDrawable(context, R.drawable.baseline_close_24) as Drawable
+                        clearButtonIcon = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.baseline_close_24
+                        ) as Drawable
                         showClearButton()
                         return true
                     }
+
                     MotionEvent.ACTION_UP -> {
-                        clearButtonIcon = ContextCompat.getDrawable(context, R.drawable.baseline_close_24) as Drawable
+                        clearButtonIcon = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.baseline_close_24
+                        ) as Drawable
                         when {
                             text != null -> text?.clear()
                         }
                         hideClearButton()
                         return true
                     }
+
                     else -> return false
                 }
             } else return false
@@ -109,7 +128,6 @@ class LoginEditText : AppCompatEditText, View.OnTouchListener {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-//        hint = "Masukkan nama Anda"
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 }
