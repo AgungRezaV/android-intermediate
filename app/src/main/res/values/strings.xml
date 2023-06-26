@@ -20,5 +20,14 @@
     <string name="gambar_hint">Gambar</string>
     <string name="belum_ada_akun">Belum ada akun ? Daftar</string>
     <string name="email_atau_password_salah">Email atau Password salah !</string>
+    <string name="latlongstory">%s / %s</string>
 
+<!--    Map-->
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="tambah_lokasi">Tambah Lokasi</string>
+    <string name="timestamp">Timestamp</string>
+    <string name="maps">Maps</string>
 </resources>

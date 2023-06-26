@@ -15,6 +15,7 @@ import com.dicoding.submissionone.data.response.LoginResponse
 import com.dicoding.submissionone.data.response.RegisterResponse
 import com.dicoding.submissionone.data.response.UserData
 import com.dicoding.submissionone.data.retrofit.ApiService
+import com.dicoding.submissionone.ui.story.AllStoriesResponse
 import com.dicoding.submissionone.ui.story.ListStory
 import com.dicoding.submissionone.ui.story.PagingSource
 import okhttp3.MultipartBody
@@ -64,6 +65,17 @@ class StoryRepository(private val userPreference: UserPreference, private val ap
         emit(Result.Loading)
         try {
             val response = apiService.addStory(token, file, description, lat, lon)
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            Log.d("Signup", e.message.toString())
+            emit(Result.Error(e.message.toString()))
+        }
+    }
+
+    fun getStoryLoc(token: String): LiveData<Result<AllStoriesResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getMap(token, 1)
             emit(Result.Success(response))
         } catch (e: Exception) {
             Log.d("Signup", e.message.toString())

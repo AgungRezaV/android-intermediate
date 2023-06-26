@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.submissionone.ui.login.LoginViewModel
 import com.dicoding.submissionone.ui.main.MainActivityViewModel
+import com.dicoding.submissionone.ui.map.MapViewModel
 import com.dicoding.submissionone.ui.register.RegisterViewModel
 import com.dicoding.submissionone.ui.story.add.AddStoryViewModel
 
@@ -23,6 +24,9 @@ class ViewModelFactory(private val repository: StoryRepository) : ViewModelProvi
             }
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MapViewModel::class.java) -> {
+                MapViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

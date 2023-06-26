@@ -38,4 +38,10 @@ interface ApiService {
         @Part("lat") lat: Float,
         @Part("lon") lon: Float
     ): AddStoryResponse
+
+    @GET("stories")
+    suspend fun getMap(
+        @Header("Authorization") auth: String,
+        @Query("location") location : Int = 1,
+    ): AllStoriesResponse
 }

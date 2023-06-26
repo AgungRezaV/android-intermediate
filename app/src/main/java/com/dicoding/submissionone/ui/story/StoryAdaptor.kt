@@ -33,6 +33,8 @@ class StoryAdaptor : PagingDataAdapter<ListStory, StoryAdaptor.StoryViewHolder>(
                     .load(story.photoUrl)
                     .into(ivListStory)
                 tvListStoryName.text = story.name
+                tvTimestamp.text = story.createdAt
+                "${story.lat} / ${story.lon}".also { tvLatLong.text = it }
                 tvListStoryDescription.text = story.description
             }
             //Detail Item

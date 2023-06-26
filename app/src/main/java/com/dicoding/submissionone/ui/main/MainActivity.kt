@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.submissionone.R
 import com.dicoding.submissionone.databinding.ActivityMainBinding
 import com.dicoding.submissionone.ui.login.LoginActivity
+import com.dicoding.submissionone.ui.map.MapActivity
 import com.dicoding.submissionone.ui.story.LoadingStoryAdapter
 import com.dicoding.submissionone.ui.story.StoryAdaptor
 import com.dicoding.submissionone.ui.story.add.AddStoryActivity
@@ -61,7 +62,6 @@ class MainActivity : AppCompatActivity() {
 
             binding.fabAddStory.setOnClickListener {
                 startActivity(Intent(this, AddStoryActivity::class.java))
-                finish()
             }
         }
     }
@@ -73,10 +73,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_logout -> {
+            R.id.logout -> {
                 sharedPref.clearToken()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+            }
+            R.id.maps -> {
+                startActivity(Intent(this, MapActivity::class.java))
             }
         }
         return true

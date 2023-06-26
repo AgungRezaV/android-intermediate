@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,6 +23,9 @@ import com.dicoding.submissionone.utils.*
 import com.dicoding.submissionone.databinding.ActivityAddStoryBinding
 import com.dicoding.submissionone.ui.main.MainActivity
 import com.dicoding.submissionone.utils.ViewModelFactory
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.switchmaterial.SwitchMaterial
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -29,14 +33,16 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
-    lateinit var binding: ActivityAddStoryBinding
+    private lateinit var binding: ActivityAddStoryBinding
     private lateinit var viewModel: AddStoryViewModel
     private lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var photoPath: String
     private var getFile: File? = null
-    private var lat: Float = 0.0F
-    private var lon: Float = 0.0F
+    private var lat: Float? = null
+    private var lon: Float? = null
+
+    private lateinit var fusedLoc: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +67,30 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
         val btnUpload: Button = binding.btnUploadStory
         btnUpload.setOnClickListener(this)
+
+        val sw: SwitchMaterial = binding.materialSwitch
+        sw.setOnClickListener(this)
+
+        binding.materialSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getMyLocation()
+                Toast.makeText(
+                    this,
+                    "Lokasi sekarang akan di upload !",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                lat = null
+                lon = null
+                Toast.makeText(
+                    this,
+                    "Tidak jadi !",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+
     }
 
     override fun onClick(v: View) {
@@ -68,9 +98,11 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnAddKamera -> {
                 startCamera()
             }
+
             R.id.btnAddGaleri -> {
                 startGallery()
             }
+
             R.id.btnUploadStory -> {
                 uploadStory()
             }
@@ -102,6 +134,41 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         val pick = Intent.createChooser(intent, "Pilih Gambar ...")
         launchGallery.launch(pick)
     }
+
+    private fun getMyLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLoc = LocationServices.getFusedLocationProviderClient(this)
+            fusedLoc.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    lat = location.longitude.toFloat()
+                    lon = location.longitude.toFloat()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Tidak ada lokasi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            (Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                getMyLocation()
+            }
+        }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -138,6 +205,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+
     private fun uploadStory() {
         if (getFile != null) {
             viewModel.getUser().observe(this) {
@@ -150,7 +218,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
                     "photo", file.name, reqImgFile
                 )
                 viewModel.getUser().observe(this) {
-                    viewModel.addStory(token, imageMultipart, desc, lat, lon)
+                    viewModel.addStory(token, imageMultipart, desc, lat!!, lon!!)
                         .observe(this@AddStoryActivity) {
                             when (it) {
                                 is Success -> {
@@ -159,9 +227,11 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
                                         .show()
                                     finish()
                                 }
+
                                 is Loading -> {
                                     Toast.makeText(this, "Loading", Toast.LENGTH_SHORT).show()
                                 }
+
                                 is Error -> {
                                     Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
                                     Toast.makeText(this, "Upload Gagal !", Toast.LENGTH_SHORT)

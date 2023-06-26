@@ -46,17 +46,25 @@
         app:layout_constraintEnd_toEndOf="@+id/ivAddImage"
         app:layout_constraintTop_toBottomOf="@+id/ivAddImage" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/material_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tambah_lokasi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddGaleri" />
+
     <EditText
         android:id="@+id/etDeskripsi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/deskripsi_gambar"
         android:inputType="textMultiLine"
         android:lines="4"
         app:layout_constraintEnd_toEndOf="@+id/btnAddKamera"
         app:layout_constraintStart_toStartOf="@+id/btnAddGaleri"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddKamera" />
+        app:layout_constraintTop_toBottomOf="@+id/material_switch" />
 
     <Button
         android:id="@+id/btnUploadStory"
