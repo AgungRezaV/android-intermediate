@@ -1,4 +1,4 @@
-package com.dicoding.submissionone.utils
+package com.dicoding.submissionone.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
@@ -9,55 +9,52 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.dicoding.submissionone.data.DummyData
-import com.dicoding.submissionone.ui.main.MainActivityViewModel
 import com.dicoding.submissionone.ui.story.ListStory
 import com.dicoding.submissionone.ui.story.StoryAdaptor
+import com.dicoding.submissionone.utils.MainDispatcherRule
+import com.dicoding.submissionone.utils.StoryRepository
+import com.dicoding.submissionone.utils.getOrAwaitValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-
-class MainViewModelTest{
+class MainViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
-
-    private lateinit var viewModel: MainActivityViewModel
-
-    @Mock
-    private val repo = mock(StoryRepository::class.java)
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    private lateinit var viewModel: MainActivityViewModel
+
+    @Mock
+    private lateinit var repository: StoryRepository
+
     @Before
     fun setUp() {
-        viewModel = MainActivityViewModel(repo)
+        viewModel = MainActivityViewModel(repository)
     }
 
     @Test
-    fun `when get List Story is Successful`() = runTest {
-        val dummyStories = DummyData.generateDummyStoryResponse()
-        val data: PagingData<ListStory> = PagingSourceTest.snapshot(dummyStories)
+    fun whenListStoryResponseSuccess() = runTest {
+        val dummyStories = DummyData.generateDummyListStoryResponse()
+        val data: PagingData<ListStory> = PagingSourceTest.snapshot(dummyStories.listStory)
+
         val expectedStory = MutableLiveData<PagingData<ListStory>>()
-
         expectedStory.value = data
-        `when`(repo.getStory()).thenReturn(expectedStory)
+        Mockito.`when`(repository.getStory()).thenReturn(expectedStory)
 
-        val actualStory: PagingData<ListStory> =
-            viewModel.getStory().getOrAwaitValue()
+        val actualStory: PagingData<ListStory> = viewModel.getStory().getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoryAdaptor.DIFF_CALLBACK,
@@ -66,21 +63,26 @@ class MainViewModelTest{
         )
         differ.submitData(actualStory)
 
-        assertNotNull(differ.snapshot())
-        assertEquals(dummyStories, differ.snapshot())
-        assertEquals(dummyStories.size, differ.snapshot().size)
-        assertEquals(dummyStories[0].name, differ.snapshot()[0]?.name)
-    }
+        //Data Not Null
+        Assert.assertNotNull(differ.snapshot())
 
-    val noopListUpdateCallback = object : ListUpdateCallback {
-        override fun onInserted(position: Int, count: Int) {}
-        override fun onRemoved(position: Int, count: Int) {}
-        override fun onMoved(fromPosition: Int, toPosition: Int) {}
-        override fun onChanged(position: Int, count: Int, payload: Any?) {}
+        //Data matches
+        Assert.assertEquals(dummyStories.listStory, differ.snapshot())
+        Assert.assertEquals(dummyStories.listStory.size, differ.snapshot().size)
+
+        //First Data Matches
+        Assert.assertEquals(dummyStories.listStory[0].id, differ.snapshot()[0]?.id)
     }
 }
 
-class PagingSourceTest: PagingSource<Int, LiveData<List<ListStory>>>() {
+private val noopListUpdateCallback = object : ListUpdateCallback {
+    override fun onInserted(position: Int, count: Int) {}
+    override fun onRemoved(position: Int, count: Int) {}
+    override fun onMoved(fromPosition: Int, toPosition: Int) {}
+    override fun onChanged(position: Int, count: Int, payload: Any?) {}
+}
+
+class PagingSourceTest : PagingSource<Int, LiveData<List<ListStory>>>() {
     companion object {
         fun snapshot(items: List<ListStory>): PagingData<ListStory> {
             return PagingData.from(items)

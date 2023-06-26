@@ -8,8 +8,8 @@ import com.dicoding.submissionone.ui.story.AllStoriesResponse
 import com.dicoding.submissionone.ui.story.ListStory
 
 object DummyData {
-    fun generateDummyStoryResponse(): List<ListStory> {
-        val item = arrayListOf<ListStory>()
+    fun generateDummyListStoryResponse(): AllStoriesResponse {
+        val item = ArrayList<ListStory>()
         for (i in 0 until 10) {
             val story = ListStory(
                 "user-5Tmi-atNlu7NpI2d",
@@ -22,7 +22,11 @@ object DummyData {
             )
             item.add(story)
         }
-        return item
+        return AllStoriesResponse(
+            error = false,
+            message = "Stories fetched successfully",
+            listStory = item
+        )
     }
 
     fun generateDummyLoginResponse(): LoginResponse {

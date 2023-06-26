@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SubmissionOne</string>
+    <string name="app_name_two">SubmissionTwo</string>
     <string name="daftar">Daftar</string>
     <string name="nama">Nama</string>
     <string name="email">Email</string>
