@@ -39,8 +39,8 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var photoPath: String
     private var getFile: File? = null
-    private var lat: Float? = null
-    private var lon: Float? = null
+    private var lat: Float = 0.0F
+    private var lon: Float = 0.0F
 
     private lateinit var fusedLoc: FusedLocationProviderClient
 
@@ -80,8 +80,8 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                lat = null
-                lon = null
+                lat = 0.0F
+                lon = 0.0F
                 Toast.makeText(
                     this,
                     "Tidak jadi !",
@@ -218,7 +218,7 @@ class AddStoryActivity : AppCompatActivity(), View.OnClickListener {
                     "photo", file.name, reqImgFile
                 )
                 viewModel.getUser().observe(this) {
-                    viewModel.addStory(token, imageMultipart, desc, lat!!, lon!!)
+                    viewModel.addStory(token, imageMultipart, desc, lat, lon)
                         .observe(this@AddStoryActivity) {
                             when (it) {
                                 is Success -> {

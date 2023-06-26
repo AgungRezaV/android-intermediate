@@ -56,12 +56,14 @@ class MainActivity : AppCompatActivity() {
             binding.rvStory.adapter = adaptor.withLoadStateFooter(
                 footer = LoadingStoryAdapter { adaptor.retry() }
             )
+
             viewModel.getStory().observe(this@MainActivity) {
                 adaptor.submitData(lifecycle, it)
             }
 
             binding.fabAddStory.setOnClickListener {
                 startActivity(Intent(this, AddStoryActivity::class.java))
+                finish()
             }
         }
     }
@@ -73,6 +75,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.reload -> {
+                viewModel.getStory().observe(this@MainActivity) {
+                    adaptor.submitData(lifecycle, it)
+                }
+            }
             R.id.logout -> {
                 sharedPref.clearToken()
                 startActivity(Intent(this, LoginActivity::class.java))

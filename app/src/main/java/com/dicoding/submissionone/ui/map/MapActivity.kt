@@ -28,7 +28,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var viewModel: MapViewModel
     private lateinit var viewModelFactory: ViewModelFactory
 
-    private lateinit var userVieModel: AddStoryViewModel
+    private lateinit var addStoryViewModel: AddStoryViewModel
     private lateinit var googleMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +41,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         viewModelFactory = ViewModelFactory.getInstance(this)
         viewModel = ViewModelProvider(this, viewModelFactory)[MapViewModel::class.java]
-        userVieModel = ViewModelProvider(this, viewModelFactory)[AddStoryViewModel::class.java]
+        addStoryViewModel = ViewModelProvider(this, viewModelFactory)[AddStoryViewModel::class.java]
 
         val mapFragment =
             supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        setDatamaps()
+        setMapData()
     }
 
-    private fun setDatamaps() {
-        userVieModel.getUser().observe(this) { it ->
+    private fun setMapData() {
+        addStoryViewModel.getUser().observe(this) { it ->
             val token = "Bearer ${it.token}"
             viewModel.getMapLocation(token).observe(this) {
                 when (it) {
@@ -65,10 +65,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun showMarker(listStory: List<ListStory>) {
         for (story in listStory) {
-            val latlng = LatLng(story.lat, story.lon)
+            val latitudeLongitude = LatLng(story.lat, story.lon)
             googleMap.addMarker(
                 MarkerOptions()
-                    .position(latlng)
+                    .position(latitudeLongitude)
                     .snippet(
                         story.description + " / " + story.createdAt
                             .removeRange(16, story.createdAt.length)
@@ -84,6 +84,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         googleMap.uiSettings.isIndoorLevelPickerEnabled = true
         googleMap.uiSettings.isCompassEnabled = true
         googleMap.uiSettings.isMapToolbarEnabled = true
+
         getLocation()
         setMapStyle()
     }
@@ -99,7 +100,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.e(TAG, "Can't find style. Error: ", exception)
         }
     }
-
 
     private fun getLocation() {
         if (ContextCompat.checkSelfPermission(
@@ -123,6 +123,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
     companion object {
-        private const val TAG = "StoryMapsActivity"
+        private const val TAG = "MapActivity"
     }
 }

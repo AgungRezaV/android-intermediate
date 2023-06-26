@@ -33,7 +33,7 @@ class StoryAdaptor : PagingDataAdapter<ListStory, StoryAdaptor.StoryViewHolder>(
                     .load(story.photoUrl)
                     .into(ivListStory)
                 tvListStoryName.text = story.name
-                tvTimestamp.text = story.createdAt
+                tvTimestamp.text = story.createdAt.dropLast(14)
                 "${story.lat} / ${story.lon}".also { tvLatLong.text = it }
                 tvListStoryDescription.text = story.description
             }

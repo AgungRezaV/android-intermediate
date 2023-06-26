@@ -22,6 +22,8 @@ class DetailActivity : AppCompatActivity() {
 
         binding.apply {
             tvDetailNama.text = detailActivity.name
+            tvDetailTimestamp.text = detailActivity.createdAt
+            "${detailActivity.lat} / ${detailActivity.lon}".also { tvDetailLocation.text = it }
             tvDetailDeskripsi.text = detailActivity.description
             Glide.with(this@DetailActivity)
                 .load(detailActivity.photoUrl)

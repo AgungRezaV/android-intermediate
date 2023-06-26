@@ -9,6 +9,8 @@
     <color name="white">#FFFFFFFF</color>
 
 <!--    Custom Color-->
+    <color name="blue">#00398F</color>
+
     <color name="grey">#B8B8B8</color>
     <color name="red">#FA0000</color>
 </resources>
