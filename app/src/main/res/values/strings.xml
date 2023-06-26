@@ -19,4 +19,6 @@
     <string name="deskripsi">Deskripsi</string>
     <string name="gambar_hint">Gambar</string>
     <string name="belum_ada_akun">Belum ada akun ? Daftar</string>
+    <string name="email_atau_password_salah">Email atau Password salah !</string>
+
 </resources>

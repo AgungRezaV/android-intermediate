@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etNama"
+        android:id="@+id/editTextInputNama"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
@@ -31,22 +31,22 @@
         app:layout_constraintTop_toBottomOf="@id/textViewNamaDetail" />
 
     <EditText
-        android:id="@+id/editTextInputEmail"
+        android:id="@+id/editTextInputEmailDaftar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etNama" />
+        app:layout_constraintTop_toBottomOf="@id/editTextInputNama" />
 
     <EditText
-        android:id="@+id/editTextInputPassword"
+        android:id="@+id/editTextInputPasswordDaftar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextInputEmail" />
+        app:layout_constraintTop_toBottomOf="@id/editTextInputEmailDaftar" />
 
     <Button
         android:id="@+id/btnRegister"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:text="@string/daftar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextInputPassword" />
+        app:layout_constraintTop_toBottomOf="@id/editTextInputPasswordDaftar" />
 
     <TextView
         android:id="@+id/textDecorOne"
