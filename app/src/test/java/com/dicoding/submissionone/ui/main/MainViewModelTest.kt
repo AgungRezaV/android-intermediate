@@ -71,7 +71,28 @@ class MainViewModelTest {
         Assert.assertEquals(dummyStories.listStory.size, differ.snapshot().size)
 
         //First Data Matches
-        Assert.assertEquals(dummyStories.listStory[0].id, differ.snapshot()[0]?.id)
+        Assert.assertEquals(dummyStories.listStory[0], differ.snapshot()[0])
+    }
+
+    @Test
+    fun whenListStoryResponseNoStory () = runTest {
+        val data: PagingData<ListStory> = PagingData.from(emptyList())
+        val expectedStory = MutableLiveData<PagingData<ListStory>>()
+
+        expectedStory.value = data
+        Mockito.`when`(repository.getStory()).thenReturn(expectedStory)
+
+        val actualStory: PagingData<ListStory> = viewModel.getStory().getOrAwaitValue()
+
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = StoryAdaptor.DIFF_CALLBACK,
+            updateCallback = noopListUpdateCallback,
+            workerDispatcher = Dispatchers.Main
+        )
+
+        differ.submitData(actualStory)
+
+        Assert.assertEquals(0, differ.snapshot().size)
     }
 }
 
